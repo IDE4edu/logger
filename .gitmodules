@@ -1,3 +1,0 @@
-[submodule "eclipse-plugin"]
-	path = eclipse-plugin
-	url = git@github.com:IDE4edu/mylyn.monitor.usage-sparse.git
