@@ -5,9 +5,10 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            name="EduRide Logger Preferences"
+            category="edu.berkeley.eduride.base_plugin.prefs.EduRidePreferencePage"
             class="edu.berkeley.eduride.loggerplugin.preferences.LoggerPreferencePage"
-            id="edu.berkeley.eduride.loggerplugin.preferences.LoggerPreferencePage">
+            id="edu.berkeley.eduride.loggerplugin.preferences.LoggerPreferencePage"
+            name="Logger">
       </page>
    </extension>
    <extension
@@ -15,6 +16,10 @@
       <initializer
             class="edu.berkeley.eduride.loggerplugin.preferences.PreferenceInitializer">
       </initializer>
+      <scope
+            class="org.eclipse.core.runtime.preferences.InstanceScope"
+            name="edu.berkeley.eduride.logger-plugin.scope">
+      </scope>
    </extension>
 
 </plugin>
