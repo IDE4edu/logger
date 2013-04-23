@@ -7,18 +7,18 @@ import org.osgi.framework.BundleContext;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class EduRideLogger extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "edu.berkeley.eduride.loggerplugin"; //$NON-NLS-1$
 
 	// The shared instance
-	private static Activator plugin;
+	private static EduRideLogger plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public Activator() {
+	public EduRideLogger() {
 	}
 
 	/*
@@ -44,18 +44,18 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static EduRideLogger getDefault() {
 		return plugin;
 	}
 
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
+
+	public static void log(String action, String content) {
+		// subject/who is the workspaceID
 	}
+	
+	
+    public static void pushLogsToServer() {
+    	// start a thread for this?
+    	
+    }
 }
