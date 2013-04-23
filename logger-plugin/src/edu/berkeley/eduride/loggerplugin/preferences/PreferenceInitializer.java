@@ -3,7 +3,7 @@ package edu.berkeley.eduride.loggerplugin.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
-import edu.berkeley.eduride.logger_plugin.EduRideLogger;
+import edu.berkeley.eduride.loggerplugin.EduRideLogger;
 
 /**
  * Class used to initialize default preference values.

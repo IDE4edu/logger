@@ -1,8 +1,8 @@
-package edu.berkeley.eduride.logger_plugin.loggers;
+package edu.berkeley.eduride.loggerplugin.loggers;
 
 import java.util.Calendar;
 
-import edu.berkeley.eduride.logger_plugin.EduRideLogger;
+import edu.berkeley.eduride.loggerplugin.EduRideLogger;
 
 
 

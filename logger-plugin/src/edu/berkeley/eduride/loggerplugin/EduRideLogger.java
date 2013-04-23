@@ -1,4 +1,4 @@
-package edu.berkeley.eduride.logger_plugin;
+package edu.berkeley.eduride.loggerplugin;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

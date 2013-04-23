@@ -1,4 +1,4 @@
-package edu.berkeley.eduride.logger_plugin.loggers;
+package edu.berkeley.eduride.loggerplugin.loggers;
 
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
