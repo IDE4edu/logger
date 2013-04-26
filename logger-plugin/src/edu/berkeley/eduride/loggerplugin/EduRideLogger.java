@@ -50,12 +50,13 @@ public class EduRideLogger extends AbstractUIPlugin {
 
 
 	public static void log(String action, String content) {
-		// subject/who is the workspaceID
+		// this should do a low latency append to a file
 	}
 	
 	
     public static void pushLogsToServer() {
     	// start a thread for this?
+    	// needs to create a json object from workspace_id and log file to send to server.  See github wiki
     	
     }
 }
