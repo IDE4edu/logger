@@ -5,7 +5,10 @@ Bundle-SymbolicName: edu.berkeley.eduride.loggerplugin; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: edu.berkeley.eduride.loggerplugin.EduRideLogger
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ edu.berkeley.eduride.navigatorview,
+ EduRideBasePlugin,
+ EduRideFeedbackView
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.eclipse.jface.text,
