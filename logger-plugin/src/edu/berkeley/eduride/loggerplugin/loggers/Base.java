@@ -19,6 +19,7 @@ public abstract class Base {
 	}
 	
 	
+	
 	public void log(String content){
 		log(myType, content);
 	}
