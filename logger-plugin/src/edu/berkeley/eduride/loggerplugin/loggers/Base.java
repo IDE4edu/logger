@@ -12,10 +12,14 @@ public abstract class Base {
 	
 	public Base() {
 		myType = this.getClass().getSimpleName();
+		LoggerInstaller.trackLogger(this);
+		log("loggerInstaller", myType + "Created");
 	}
 	
 	public Base(String name) {
 		myType = name;
+		LoggerInstaller.trackLogger(this);
+		log("loggerInstaller", myType + "Created");
 	}
 	
 	
@@ -29,5 +33,10 @@ public abstract class Base {
 		System.out.println("(" + System.currentTimeMillis() + ") LOGGER " + action + ": " + content);
 	}
 	
+	
+	public static void logStatic(String action, String content) {
+		EduRideLogger.log(action, content);
+		System.out.println("(" + System.currentTimeMillis() + ") LOGGER " + action + ": " + content);
+	}
 
 }

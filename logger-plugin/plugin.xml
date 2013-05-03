@@ -21,5 +21,11 @@
             name="edu.berkeley.eduride.logger-plugin.scope">
       </scope>
    </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="edu.berkeley.eduride.loggerplugin.LoggerEarlyStartup">
+      </startup>
+   </extension>
 
 </plugin>

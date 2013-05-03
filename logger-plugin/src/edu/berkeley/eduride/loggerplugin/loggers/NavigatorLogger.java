@@ -14,13 +14,14 @@ public class NavigatorLogger extends Base implements NavigationListener {
 	public NavigatorLogger(boolean install) {
 		super("nav");
 		if (install) {
-			installMe();
+			install();
 		}
 	}
 	
 	
-	public void installMe() {
+	public void install() {
 		NavigatorActivator.getDefault().registerListener(this);
+		log("loggerInstall", "Navigator logger is installed");
 	}
 	
 	
@@ -29,8 +30,9 @@ public class NavigatorLogger extends Base implements NavigationListener {
 	
 	@Override
 	public void stepChanged(Step oldstep, Step newstep) {
+		// steps might be null, yo
 		log("stepChanged", "Leave " + oldstep + " goto " + newstep);
-		if (newstep.isCODE()) {
+		if (newstep != null && newstep.isCODE()) {
 			log("enterCodeStep", newstep.getSource());
 		}
 

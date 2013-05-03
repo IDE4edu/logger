@@ -11,6 +11,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import edu.berkeley.eduride.loggerplugin.loggers.Base;
+import edu.berkeley.eduride.loggerplugin.loggers.LoggerInstaller;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -48,7 +51,10 @@ public class EduRideLogger extends AbstractUIPlugin {
 			}
 	    	openLogFile = initLogFile();
 			installLoggers();
+		} else {
+			Base.logStatic("loggerInitFailer", "logStorage is null, yo");
 		}
+		Base.logStatic("loggerInit", "Logger bundle started");
 		
 	}
 
@@ -57,8 +63,8 @@ public class EduRideLogger extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		log("loggerInit", "Logger bundle shutting down");
 		pushLogsToServer();
-		
 		plugin = null;
 		super.stop(context);
 	}
@@ -81,7 +87,11 @@ public class EduRideLogger extends AbstractUIPlugin {
 		// this should do a low latency append to a file.
 		// needs to keep timestamp on each entry!
 		LogEntry le = new LogEntry(action, content, System.currentTimeMillis());
-		memoryStore.add(le);
+		if (memoryStore != null) {
+			memoryStore.add(le);
+		} else {
+			System.out.println("Missed log event! " + action + content);
+		}
 		// maybe use serialization for the LogEntry? 
 	}
 	
@@ -93,9 +103,9 @@ public class EduRideLogger extends AbstractUIPlugin {
     }
 	
 	
-    public static void installLoggers() {
+    public void installLoggers() {
     	// install the listeners, yo.
-    	
+    	LoggerInstaller.start();
     }
     
     

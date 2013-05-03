@@ -1,31 +1,37 @@
 package edu.berkeley.eduride.loggerplugin.loggers;
 
 //import org.eclipse.jdt.internal.ui.JavaEditor;
-import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.ui.texteditor.AbstractTextEditor;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 
 
 public class KeyPressInEditor extends Base implements KeyListener {
 
-	// public KeyPressInEditor() {
-	// super();
-	// }
+	public static QualifiedName isa_key = new QualifiedName("edu.berkeley.eduride","isAssignment");
+
 
 	public KeyPressInEditor(IEditorPart editor) {
 		super("kpie");
-		installMe(editor);
+		install(editor);
 	}
 
-	public void installMe(IEditorPart editor) {
+	public void install(IEditorPart editor) {
 		StyledText text = null;
 		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors()
 		if (editor != null) {
@@ -40,14 +46,53 @@ public class KeyPressInEditor extends Base implements KeyListener {
 	    } 
 		if (text != null) {
 			text.addKeyListener(this);
-			log("LoggerInstall", "KeyPressInEditor installed in " + editor.getTitle());
+			log("loggerInstall", "KeyPressInEditor installed in " + editor.getTitle());
 		} else {
-			log("LoggerInstall", "KeyPressInEditor failed to installed in " + editor.getTitle());
+			log("loggerInstall", "KeyPressInEditor failed to installed in " + editor.getTitle());
 		}
 
 	}
 
 	
+	public static boolean shouldInstall(IEditorPart editor) {
+		// first, needs to be a text editor -- we only care about java, though
+		if (editor instanceof AbstractDecoratedTextEditor) {
+			IEditorInput input = editor.getEditorInput();
+			// Check that the editor is reading from a file
+			IFile file = (input instanceof FileEditorInput)
+					? ((FileEditorInput)input).getFile()
+					: null;
+			if (file != null) {
+				// look at the files in the contained project, see if there
+				// is an ISA file there.
+				IProject proj = file.getProject();
+				boolean containsISA = false;
+				try {
+					proj.setSessionProperty(isa_key, null);
+					proj.accept(new IResourceVisitor() {			
+						@Override
+						public boolean visit(IResource resource) throws CoreException {
+							if (!(resource.getType() == IResource.FILE)) return true;
+							String extension = resource.getFileExtension();
+							if (extension != null) {
+								if (extension.equalsIgnoreCase("isa")) {
+									resource.getProject().setSessionProperty(isa_key, new Boolean(true));
+								}
+							}
+							return true;
+						}
+					});
+					if (((Boolean)proj.getSessionProperty(isa_key)).booleanValue()) {
+						containsISA = true;
+					}
+				} catch (CoreException e) {
+					//e.printStackTrace();
+				}
+				return containsISA;
+			}
+		}
+		return false;
+	}
 
 
 
