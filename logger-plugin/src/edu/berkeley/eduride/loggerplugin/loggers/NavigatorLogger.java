@@ -14,12 +14,12 @@ public class NavigatorLogger extends Base implements NavigationListener {
 	public NavigatorLogger(boolean install) {
 		super("nav");
 		if (install) {
-			install();
+			installMe();
 		}
 	}
 	
 	
-	public void install() {
+	public void installMe() {
 		NavigatorActivator.getDefault().registerListener(this);
 		log("loggerInstall", "Navigator logger is installed");
 	}

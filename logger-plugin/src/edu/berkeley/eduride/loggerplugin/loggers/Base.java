@@ -13,13 +13,13 @@ public abstract class Base {
 	public Base() {
 		myType = this.getClass().getSimpleName();
 		LoggerInstaller.trackLogger(this);
-		log("loggerInstaller", myType + "Created");
+		log("loggerInstall", myType + " instantiated standard.");
 	}
 	
 	public Base(String name) {
 		myType = name;
 		LoggerInstaller.trackLogger(this);
-		log("loggerInstaller", myType + "Created");
+		log("loggerInstaller", myType + " instantiated.");
 	}
 	
 	

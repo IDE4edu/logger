@@ -2,6 +2,9 @@ package edu.berkeley.eduride.loggerplugin.loggers;
 
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
@@ -23,9 +26,10 @@ public class EditorEventListener extends Base implements IPartListener2 {
 	
 	public EditorEventListener(boolean install) {
 		if (install) {
-			String errString = installMe();
+			ArrayList<String> msgs = new ArrayList<String>();
+			String errString = installMe(msgs);
 			if ( errString == null ) {
-				log("loggerInstall", "Editor event listener installed");
+				log("loggerInstall", "Editor event listener installed on pages: " + Arrays.toString(msgs.toArray()));
 			} else {
 				log("loggerInstallFailure", "Editor event listener not installed: " + errString);
 			}
@@ -34,29 +38,30 @@ public class EditorEventListener extends Base implements IPartListener2 {
 	}
 	
 	
-	public String installMe() {
-		// add as a listener for all open editors (we throw out views in the
-		// listening methods)
+	public String installMe(ArrayList<String> msgs) {
+		// add as a listener for all open editors (we throw out views in the listening methods)
 		String errString = "";
 		try {
-			IWorkbench workbench = PlatformUI.getWorkbench();   // might throw exception...
-
-			IWorkbenchWindow window = workbench == null ? null : workbench.getActiveWorkbenchWindow();
-			if (window == null) {
-				errString += "Active workbench window is null.  ";
-			} else {
-				IWorkbenchPage[] pages = window.getPages();
-				boolean foundAPage = false;
-				for (IWorkbenchPage page : pages) {
-					if (page != null) {
-						page.addPartListener(this);
-						foundAPage = true; // if any page is good
+			IWorkbench workbench = PlatformUI.getWorkbench(); // might throw exception
+			IWorkbenchWindow windows[] = workbench == null ? null : workbench.getWorkbenchWindows();
+			for (int i=0; i < windows.length ; i++) {
+				IWorkbenchWindow window = windows[i];
+				if (window == null) {
+					errString += "Active workbench window "+ i + " is null.  ";
+				} else {
+					IWorkbenchPage[] pages = window.getPages();
+					for (IWorkbenchPage page : pages) {
+						if (page != null) {
+							page.addPartListener(this);
+							msgs.add(page.getLabel());
+						}
+						// window.getPartService().addPartListener(this); //
+						// more
+						// modernish
 					}
-					// window.getPartService().addPartListener(this); // more
-					// modernish
-				}
-				if (!foundAPage) {
-					errString += "No non-null pages in active workbench window.  ";
+					if (msgs.size() == 0) {
+						errString += "No non-null pages in any workbench window.  ";
+					} 
 				}
 			}
 		} catch (IllegalStateException e) {

@@ -19,6 +19,7 @@ public class LoggerInstaller {
 	
 	public static void start() {
 		
+		Base.logStatic("loggerInstaller", "started installing loggers");
 		try {
 			PlatformUI.getWorkbench();
 		} catch (IllegalStateException e) {
