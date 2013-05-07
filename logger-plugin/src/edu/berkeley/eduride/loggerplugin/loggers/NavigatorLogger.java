@@ -5,7 +5,7 @@ import navigatorView.controller.NavigationListener;
 import navigatorView.model.Assignment;
 import navigatorView.model.Step;
 
-public class NavigatorLogger extends Base implements NavigationListener {
+public class NavigatorLogger extends BaseLogger implements NavigationListener {
 
 	public NavigatorLogger() {
 		this(true);

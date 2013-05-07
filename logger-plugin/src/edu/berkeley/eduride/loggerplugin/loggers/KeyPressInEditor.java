@@ -21,17 +21,28 @@ import org.eclipse.ui.texteditor.ITextEditor;
 
 
 
-public class KeyPressInEditor extends Base implements KeyListener {
+public class KeyPressInEditor extends BaseLogger implements KeyListener {
 
 	public static QualifiedName isa_key = new QualifiedName("edu.berkeley.eduride","isAssignment");
 
 
 	public KeyPressInEditor(IEditorPart editor) {
 		super("kpie");
-		install(editor);
+		this.installMe(editor);
 	}
 
-	public void install(IEditorPart editor) {
+	
+	public static void installNew(IEditorPart editor) {
+		// install key listener?
+		if (KeyPressInEditor.shouldInstall(editor)) {
+			KeyPressInEditor kpie = new KeyPressInEditor(editor);
+			LoggerInstaller.trackLogger(kpie);
+		}
+	}
+	
+	
+	
+	public void installMe(IEditorPart editor) {
 		StyledText text = null;
 		// PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditors()
 		if (editor != null) {

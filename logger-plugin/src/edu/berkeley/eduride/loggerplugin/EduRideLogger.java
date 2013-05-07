@@ -21,7 +21,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
-import edu.berkeley.eduride.loggerplugin.loggers.Base;
+import edu.berkeley.eduride.loggerplugin.loggers.BaseLogger;
 import edu.berkeley.eduride.loggerplugin.loggers.LoggerInstaller;
 
 /**
@@ -63,9 +63,9 @@ public class EduRideLogger extends AbstractUIPlugin {
 	    	openLogFile = initLogFile();
 			installLoggers();
 		} else {
-			Base.logStatic("loggerInitFailer", "logStorage is null, yo");
+			BaseLogger.logStatic("loggerInitFailer", "logStorage is null, yo");
 		}
-		Base.logStatic("loggerInit", "Logger bundle started");
+		BaseLogger.logStatic("loggerInit", "Logger bundle started");
 		
 	}
 

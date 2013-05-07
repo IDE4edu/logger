@@ -6,23 +6,26 @@ import edu.berkeley.eduride.loggerplugin.EduRideLogger;
 
 
 
-public abstract class Base {
+public abstract class BaseLogger {
 
+	
+	static String defaultType = "baseLogger";
 	protected String myType = ""; 
 	
-	public Base() {
+	public BaseLogger() {
 		myType = this.getClass().getSimpleName();
 		LoggerInstaller.trackLogger(this);
 		log("loggerInstall", myType + " instantiated standard.");
 	}
 	
-	public Base(String name) {
+	public BaseLogger(String name) {
 		myType = name;
 		LoggerInstaller.trackLogger(this);
 		log("loggerInstaller", myType + " instantiated.");
 	}
 	
 	
+	// Note -- logging should move out to LogEvents
 	
 	public void log(String content){
 		log(myType, content);

@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
-import edu.berkeley.eduride.loggerplugin.loggers.Base;
+import edu.berkeley.eduride.loggerplugin.loggers.BaseLogger;
 
 public class LoggerInstaller {
 
-	static ArrayList <Base> loggers = new ArrayList<Base>();
+	static ArrayList <BaseLogger> loggers = new ArrayList<BaseLogger>();
 
-	// this gets called from Base constructor
-	public static void trackLogger(Base logger) {
+	// this gets called from BaseLogger constructor
+	public static void trackLogger(BaseLogger logger) {
 		loggers.add(logger);
 	}
 	
@@ -19,12 +19,12 @@ public class LoggerInstaller {
 	
 	public static void start() {
 		
-		Base.logStatic("loggerInstaller", "started installing loggers");
+		BaseLogger.logStatic("loggerInstaller", "started installing loggers");
 		try {
 			PlatformUI.getWorkbench();
 		} catch (IllegalStateException e) {
 			// getWorkbench() failed.
-			Base.logStatic("loggerInstallFailure", "Workbench wasn't installed yet...");
+			BaseLogger.logStatic("loggerInstallFailure", "Workbench wasn't installed yet...");
 			return;
 		} 
 
@@ -33,7 +33,7 @@ public class LoggerInstaller {
 
 		new EditorEventListener(true);
 		
-		Base.logStatic("loggerInstall", "finished installing loggers");
+		BaseLogger.logStatic("loggerInstall", "finished installing loggers");
 	}
 	
 	
