@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Loggerplugin
 Bundle-SymbolicName: edu.berkeley.eduride.loggerplugin; singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.1.16
 Bundle-Activator: edu.berkeley.eduride.loggerplugin.EduRideLogger
 Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
