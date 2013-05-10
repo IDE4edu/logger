@@ -3,22 +3,23 @@ package edu.berkeley.eduride.loggerplugin.loggers;
 import java.util.Calendar;
 
 import edu.berkeley.eduride.loggerplugin.EduRideLogger;
+import edu.berkeley.eduride.loggerplugin.LoggerInstaller;
 
 
 
-public abstract class BaseLogger {
+public abstract class AbstractLogger {
 
 	
 	static String defaultType = "baseLogger";
 	protected String myType = ""; 
 	
-	public BaseLogger() {
+	public AbstractLogger() {
 		myType = this.getClass().getSimpleName();
 		LoggerInstaller.trackLogger(this);
 		log("loggerInstall", myType + " instantiated standard.");
 	}
 	
-	public BaseLogger(String name) {
+	public AbstractLogger(String name) {
 		myType = name;
 		LoggerInstaller.trackLogger(this);
 		log("loggerInstaller", myType + " instantiated.");

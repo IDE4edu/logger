@@ -19,9 +19,11 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import edu.berkeley.eduride.loggerplugin.LoggerInstaller;
 
 
-public class KeyPressInEditor extends BaseLogger implements KeyListener {
+
+public class KeyPressInEditor extends AbstractLogger implements KeyListener {
 
 	public static QualifiedName isa_key = new QualifiedName("edu.berkeley.eduride","isAssignment");
 

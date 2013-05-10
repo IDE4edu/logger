@@ -18,7 +18,7 @@ import org.eclipse.ui.PlatformUI;
  * It also installs the KeyPressInEditor listener on editors 
  * that are open at construction time or will open later.
  */
-public class EditorEventListener extends BaseLogger implements IPartListener2 {
+public class EditorEventListener extends AbstractLogger implements IPartListener2 {
 
 	public EditorEventListener(boolean install) {
 		if (install) {

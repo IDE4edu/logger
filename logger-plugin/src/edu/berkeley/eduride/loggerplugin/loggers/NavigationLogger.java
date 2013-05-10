@@ -5,13 +5,13 @@ import navigatorView.controller.NavigationListener;
 import navigatorView.model.Assignment;
 import navigatorView.model.Step;
 
-public class NavigatorLogger extends BaseLogger implements NavigationListener {
+public class NavigationLogger extends AbstractLogger implements NavigationListener {
 
-	public NavigatorLogger() {
+	public NavigationLogger() {
 		this(true);
 	}
 	
-	public NavigatorLogger(boolean install) {
+	public NavigationLogger(boolean install) {
 		super("nav");
 		if (install) {
 			installMe();
@@ -49,6 +49,10 @@ public class NavigatorLogger extends BaseLogger implements NavigationListener {
 	
 	}
 
+	
+	public void log(String action, String message) {
+		super.log(action, message);
+	}
 	
 	
 }

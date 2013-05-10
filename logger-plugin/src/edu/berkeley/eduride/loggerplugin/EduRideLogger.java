@@ -21,8 +21,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
-import edu.berkeley.eduride.loggerplugin.loggers.BaseLogger;
-import edu.berkeley.eduride.loggerplugin.loggers.LoggerInstaller;
+import edu.berkeley.eduride.loggerplugin.loggers.AbstractLogger;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -63,9 +62,9 @@ public class EduRideLogger extends AbstractUIPlugin {
 	    	openLogFile = initLogFile();
 			installLoggers();
 		} else {
-			BaseLogger.logStatic("loggerInitFailer", "logStorage is null, yo");
+			AbstractLogger.logStatic("loggerInitFailer", "logStorage is null, yo");
 		}
-		BaseLogger.logStatic("loggerInit", "Logger bundle started");
+		AbstractLogger.logStatic("loggerInit", "Logger bundle started");
 		
 	}
 
@@ -103,7 +102,6 @@ public class EduRideLogger extends AbstractUIPlugin {
 		} else {
 			System.out.println("Missed log event! " + action + content);
 		}
-		// maybe use serialization for the LogEntry? 
 		try {
 			ObjectOutputStream o = new ObjectOutputStream(openLogFile);
 			o.writeObject(le);
@@ -128,14 +126,14 @@ public class EduRideLogger extends AbstractUIPlugin {
     
 	
 	//////////////////////////////
-	
+	/// This should all move out to GenericLogEntry and LogEntryList
 
 	private static IPath logStorage = null;
 	private static FileOutputStream openLogFile = null;
 	private static ArrayList<LogEntry> memoryStore = null;
 	
 	private static class LogEntry implements Serializable {
-		private static final long serialVersionUID = 12980178901023L;
+		private static final long serialVersionUID = 2L;
 		public final String action;
 		public final String content;
 		public final Long timestamp;
@@ -174,11 +172,14 @@ public class EduRideLogger extends AbstractUIPlugin {
     	ArrayList<LogEntry> fileStore = new ArrayList<EduRideLogger.LogEntry>();
     	ObjectInputStream stream;
 		try {
-			stream = new ObjectInputStream(new FileInputStream(f));
+			FileInputStream fis = new FileInputStream(f);
+			stream = new ObjectInputStream(fis);
 		} catch (FileNotFoundException e) {
+			// new FileInputStream failed
 			e.printStackTrace();
 			return;
 		} catch (IOException e) {
+			//ObjectInputStream failed
 			e.printStackTrace();
 			return;
 		}

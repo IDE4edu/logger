@@ -9,7 +9,7 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
-public class JavaModelListener extends BaseLogger implements IElementChangedListener {
+public class JavaModelListener extends AbstractLogger implements IElementChangedListener {
 	
 	public JavaModelListener() {
 	}
