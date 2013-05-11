@@ -1,11 +1,13 @@
 package edu.berkeley.eduride.loggerplugin;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -15,9 +17,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osgi.framework.BundleContext;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
@@ -30,7 +35,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "edu.berkeley.eduride.loggerplugin"; //$NON-NLS-1$
-	private static final String PUSH_TARGET = "/log";
+	private static final String PUSH_TARGET = "/log/";
 
 	// The shared instance
 	private static EduRideLogger plugin;
@@ -49,24 +54,28 @@ public class EduRideLogger extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		logStorage = plugin.getStateLocation();
+		makeWorkspaceIDFile();
 		memoryStore = new ArrayList<LogEntry>();
 		memoryStore.ensureCapacity(5000);
 
-    	
+
 		if (logStorage != null) {
-			if (getLogFile().exists()) {
-				// old log file exists!
-				pushLogFromFile(getLogFile());
-				retireLogFile(getLogFile());
+			if (getObjectLogFile().exists()) {
+		    	// TODO this doesn't seem to work
+				pushObjectLogFromFile(getObjectLogFile());
+				retireLogFile(getObjectLogFile());
 			}
-	    	openLogFile = initLogFile();
+	    	openTextLogFileWriter = initTextLogFile();
+	    	openObjectLogStream = initObjectLogFile();
 			installLoggers();
 		} else {
 			AbstractLogger.logStatic("loggerInitFailer", "logStorage is null, yo");
 		}
 		AbstractLogger.logStatic("loggerInit", "Logger bundle started");
 		
+		
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -74,7 +83,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		log("loggerInit", "Logger bundle shutting down");
-		pushLogsToServer();
+		pushLogsToServer(false);
 		plugin = null;
 		super.stop(context);
 	}
@@ -102,19 +111,34 @@ public class EduRideLogger extends AbstractUIPlugin {
 		} else {
 			System.out.println("Missed log event! " + action + content);
 		}
+		// this is ugly slow right now -- speed it up!
 		try {
-			ObjectOutputStream o = new ObjectOutputStream(openLogFile);
-			o.writeObject(le);
+			openObjectLogStream.writeObject(le);
+			openObjectLogStream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			openTextLogFileWriter.write(le.asJSONArray().toString());
+			openTextLogFileWriter.write(",");
+			openTextLogFileWriter.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
-    public static void pushLogsToServer() {
+	public static void pushLogsToServer() {
+		pushLogsToServer(true);
+	}
+	
+    private static void pushLogsToServer(boolean logit) {
     	// start a thread for this?
     	// needs to create a json object from workspace_id and log file to send to server.  See github wiki
-    	pushLogFromStore(memoryStore);
+    	int sent = pushLogFromStore(memoryStore);
+    	if (logit) {
+    		log("logsSent", "number of log entrys just sent: " + sent);
+    	}
     }
 	
 	
@@ -129,7 +153,8 @@ public class EduRideLogger extends AbstractUIPlugin {
 	/// This should all move out to GenericLogEntry and LogEntryList
 
 	private static IPath logStorage = null;
-	private static FileOutputStream openLogFile = null;
+	private static FileWriter openTextLogFileWriter = null;
+	private static ObjectOutputStream openObjectLogStream = null;
 	private static ArrayList<LogEntry> memoryStore = null;
 	
 	private static class LogEntry implements Serializable {
@@ -143,45 +168,79 @@ public class EduRideLogger extends AbstractUIPlugin {
 			this.content=content;
 			this.timestamp = timestamp;
 		}
+		
+		public JSONArray asJSONArray() {
+			String[] sarr = {this.action, this.content, this.timestamp.toString()};
+			return (new JSONArray(sarr));
+		}
 	}
 
-	private static void pushLogFromStore(ArrayList<LogEntry> store) {
+	private static int pushLogFromStore(ArrayList<LogEntry> store)  {
 		if (store.size() == 0) {
-			return;
+			return 0;
 		}
+		int sent = 0;
+		HttpURLConnection connection = null;
 		try {
 			URL target = new URL("http", EduRideBase.getDomain(), PUSH_TARGET);
-			HttpURLConnection connection = (HttpURLConnection) target.openConnection();           
-    		String logParams = generateLogJson(store);
+			connection = (HttpURLConnection) target.openConnection();
+			String logParams = generateLogJson(store);
 			connection.setDoOutput(true);
-			connection.setRequestMethod("POST"); 
-
-			PrintWriter wr = new PrintWriter(connection.getOutputStream ());
+			connection.setDoInput(true);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setRequestProperty("Content-Length",
+					"" + Integer.toString(logParams.getBytes().length));
+			PrintWriter wr = new PrintWriter(connection.getOutputStream());
 			wr.write(logParams);
 			wr.flush();
 			wr.close();
-			connection.disconnect();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					connection.getInputStream()));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = rd.readLine()) != null) {
+				sb.append(line + '\n');
+			}
+			String jsonstr = sb.toString();
+			JSONObject jsonobj = new JSONObject(jsonstr);
+			if ("success" != jsonobj.getString("status")) {
+				// failed, for some reason
+				throw new IOException(jsonobj.getString("message"));
+			} else {
+				sent = store.size();
+				clearLogs();
+			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
 		}
+		return sent;
+
 	}
 	
-    private static void pushLogFromFile(File f) {
+	// TODO fails right now on second read...  class AC unknown?
+    private static int pushObjectLogFromFile(File f) {
     	ArrayList<LogEntry> fileStore = new ArrayList<EduRideLogger.LogEntry>();
-    	ObjectInputStream stream;
+    	ObjectInputStream stream = null;
+    	FileInputStream fis = null;
 		try {
-			FileInputStream fis = new FileInputStream(f);
+			fis = new FileInputStream(f);
 			stream = new ObjectInputStream(fis);
 		} catch (FileNotFoundException e) {
 			// new FileInputStream failed
 			e.printStackTrace();
-			return;
+			return 0;
 		} catch (IOException e) {
 			//ObjectInputStream failed
 			e.printStackTrace();
-			return;
+			return 0;
 		}
 		try {
 	    	while (true) {
@@ -193,25 +252,39 @@ public class EduRideLogger extends AbstractUIPlugin {
 			e.printStackTrace();
 		} catch (IOException e) {
 			// reached end of stream
+			e.printStackTrace();
 		}
-		pushLogFromStore(fileStore);
+		try {
+			if (fis != null) {
+				fis.close();
+			}
+			if (stream != null) {
+				stream.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return pushLogFromStore(fileStore);
     }
 
     
+    // not gonna check is store is empty, since it won't break
 	private static String generateLogJson(ArrayList<LogEntry> store) {
-		String json = "logs={w: '" + EduRideBase.getWorkspaceID() + "', logs: [";
-		for (LogEntry entry: store) {
-			json += "[" + entry.action + ", " + entry.content + ", " + entry.timestamp + "],";
+		JSONObject rootjson = new JSONObject();
+		rootjson.put("w", EduRideBase.getWorkspaceID());
+		JSONArray logjson = new JSONArray();
+		for (LogEntry entry : store) {
+			logjson.put(entry.asJSONArray());
 		}
-		json += "]}";
-		return json;
+		rootjson.put("logs", logjson);
+		return rootjson.toString();
 	}
 
-	private static FileOutputStream initLogFile() {
-		FileOutputStream fw = null;
+	private static FileWriter initTextLogFile() {
+		FileWriter fw = null;
 		if (logStorage != null) {
 			try {
-				fw = new FileOutputStream(getLogFile(), true);
+				fw = new FileWriter(getTextLogFile(), true);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -219,18 +292,72 @@ public class EduRideLogger extends AbstractUIPlugin {
 		return fw;
 	}
 	
+	private static ObjectOutputStream initObjectLogFile() {
+		FileOutputStream fw = null;
+		ObjectOutputStream oos = null;
+		if (logStorage != null) {
+			try {
+				fw = new FileOutputStream(getObjectLogFile(), true);
+				oos = new ObjectOutputStream(fw);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return oos;
+	}
 	
-	private static File getLogFile() {
+	
+	private void makeWorkspaceIDFile() {
+		File f = logStorage.append("workspaceID").toFile();
+		if (!f.exists()) {
+			//FileOutputStream fos = new FileOutputStream(f);
+			try {
+				FileWriter fw = new FileWriter(f);
+				fw.write(EduRideBase.getWorkspaceID());
+				fw.flush();
+				fw.close();
+				//log("install", "made the workspace ID file");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//log("installFail", "couldn't write the workspace ID file");
+				e.printStackTrace();
+			}
+		}
+
+		
+	}
+
+	
+	private static File getTextLogFile() {
 		File lf = null;
 		if (logStorage != null) {
-			lf = logStorage.append(getLogFileName()).toFile();
+			lf = logStorage.append(getTextLogFileName()).toFile();
 		}	
 		return lf;
 	}
 	
-	private static String getLogFileName() {
-		return "eduRideLogFile.log";
+	private static File getObjectLogFile() {
+		File lf = null;
+		if (logStorage != null) {
+			lf = logStorage.append(getObjectLogFileName()).toFile();
+		}	
+		return lf;
+	}
+	
+	private static String getTextLogFileName() {
+		return "eduRideTextLogFile.log";
 		// maybe someday will rotate, etc.
+	}
+	
+	private static String getObjectLogFileName() {
+		return "eduRideObjectLogFile.log";
+		// maybe someday will rotate, etc.
+	}
+	
+	
+	private static void clearLogs() {
+		memoryStore.clear();
+		// ignore the file for now, hey.
 	}
 	
 	private static void retireLogFile(File f) {
