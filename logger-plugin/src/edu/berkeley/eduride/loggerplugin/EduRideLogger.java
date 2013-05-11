@@ -252,7 +252,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 			e.printStackTrace();
 		} catch (IOException e) {
 			// reached end of stream
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		try {
 			if (fis != null) {
