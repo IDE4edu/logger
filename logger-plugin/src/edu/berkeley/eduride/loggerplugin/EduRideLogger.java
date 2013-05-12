@@ -205,7 +205,8 @@ public class EduRideLogger extends AbstractUIPlugin {
 			}
 			String jsonstr = sb.toString();
 			JSONObject jsonobj = new JSONObject(jsonstr);
-			if ("success" != jsonobj.getString("status")) {
+			String success = jsonobj.getString("status");
+			if (!(success.equals("success"))) {
 				// failed, for some reason
 				throw new IOException(jsonobj.getString("message"));
 			} else {
@@ -285,6 +286,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 		if (logStorage != null) {
 			try {
 				fw = new FileWriter(getTextLogFile(), true);
+				fw.write("{\"w\":\"" + EduRideBase.getWorkspaceID() + "\",\"logs\":[");  // start the regular log file, why not
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
