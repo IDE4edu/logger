@@ -15,10 +15,12 @@ import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -84,6 +86,29 @@ public class KeyPressInEditor extends AbstractLogger implements KeyListener {
 
 	}
 
+	
+	
+// TODO	
+//	public static void updateSelector(IEditorPart editor) {
+//		if (editor != null) {
+//			StyledText text = (StyledText) editor.getAdapter(Control.class);
+//			if (text != null) {
+//				Listener[] listeners = text.getListeners(SWT.KeyDown);
+//				for (Listener listener : listeners) {
+//					if (listener instanceof KeyPressInEditor) {
+//						listener.
+//						IDocumentProvider dp = this.editor.getDocumentProvider();
+//						this.doc = dp.getDocument(editor.getEditorInput());
+//						ISelectionProvider sp = this.editor.getSelectionProvider();
+//						sel = (ITextSelection) sp.getSelection();
+//						sp.addSelectionChangedListener(new selChanged(this));
+//
+//					}
+//				}
+//			}
+//		}
+//	}
+	
 	
 	public static boolean shouldInstall(IEditorPart editor) {
 		// first, needs to be a text editor -- we only care about java, though

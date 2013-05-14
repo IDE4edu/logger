@@ -94,13 +94,11 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 		// Key Listener
 		final IEditorPart ed = editor;
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-
 			@Override
 			public void run() {
 				//TODO get line number working yo
 				//new KeyPressInEditor(ed);
 			}
-			
 		});
 
 		
@@ -128,6 +126,7 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 		IEditorPart editor = getEditor(partRef);
 		if (editor != null) {
 			log("editorOpened", editor.getTitle());
+			// TODO -- make install conditional, perhaps. also, update selector?
 			installOtherLoggers(editor);
 		}
 
