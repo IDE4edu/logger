@@ -39,8 +39,8 @@ public abstract class AbstractLogger {
 
 	public void log(String action, String content) {
 		EduRideLogger.log(action, content);
-		System.out.println("(" + System.currentTimeMillis() + ") LOGGER "
-				+ action + ": " + content);
+//		System.out.println("(" + System.currentTimeMillis() + ") LOGGER "
+//				+ action + ": " + content);
 	}
 
 
@@ -54,8 +54,8 @@ public abstract class AbstractLogger {
 	
 	public static void logStatic(String action, String content) {
 		EduRideLogger.log(action, content);
-		System.out.println("(" + System.currentTimeMillis() + ") LOGGER "
-				+ action + ": " + content);
+//		System.out.println("(" + System.currentTimeMillis() + ") LOGGER "
+//				+ action + ": " + content);
 	}
 
 	
