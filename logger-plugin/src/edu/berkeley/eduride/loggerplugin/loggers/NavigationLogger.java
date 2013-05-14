@@ -53,6 +53,10 @@ public class NavigationLogger extends AbstractLogger implements NavigationListen
 	@Override
 	public void invokeTest(Step step, String launchConfig) {
 		log("navInvokeTest", "Step " + step + " launchConfig " + launchConfig);
+		try {
+			log("File",step.getSourceFile());
+		} catch (FileNotFoundException e) {
+		}
 	}
 
 	@Override
