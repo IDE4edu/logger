@@ -1,5 +1,10 @@
 package edu.berkeley.eduride.loggerplugin.loggers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import org.eclipse.equinox.log.LogFilter;
+
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.NavigationListener;
 import navigatorView.model.Assignment;
@@ -32,6 +37,13 @@ public class NavigationLogger extends AbstractLogger implements NavigationListen
 	public void stepChanged(Step oldstep, Step newstep) {
 		// steps might be null, yo
 		log("stepChanged", "Leave " + oldstep + " goto " + newstep);
+		if (oldstep != null && oldstep.isCODE()) {
+			try {
+				log("File", oldstep.getSourceFile());
+			} catch (FileNotFoundException e) {
+				log("FileError", "couldn't log file contents for step:" + oldstep.getName());
+			}
+		}
 		if (newstep != null && newstep.isCODE()) {
 			log("enterCodeStep", newstep.getSource());
 		}
@@ -50,9 +62,7 @@ public class NavigationLogger extends AbstractLogger implements NavigationListen
 	}
 
 	
-	public void log(String action, String message) {
-		super.log(action, message);
-	}
+
 	
 	
 }

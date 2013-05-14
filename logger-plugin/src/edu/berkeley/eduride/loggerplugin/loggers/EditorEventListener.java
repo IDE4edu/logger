@@ -33,6 +33,7 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 				log("loggerInstallFailure",
 						"Editor event listener not installed: " + errString);
 			}
+			
 			// do existing editors
 			installOnExistingEditors();
 		}
@@ -55,7 +56,7 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 					IWorkbenchPage[] pages = window.getPages();
 					for (IWorkbenchPage page : pages) {
 						if (page != null) {
-							page.addPartListener(this);
+							installMeOnPage(page);
 							msgs.add(page.getLabel());
 						}
 						// window.getPartService().addPartListener(this); //
@@ -73,18 +74,30 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 		return (errString == "" ? null : errString);
 	}
 
+	
+	
+	private void installMeOnPage(IWorkbenchPage page) {
+		page.addPartListener(this);
+	}
+	
+	
+	
+	static private void installOtherLoggers(IEditorPart editor) {
+		// Key Listener
+
+		
+	}
+	
+	
 	public void installOnExistingEditors() {
 		// find existing editors and log that they are already open
 		// TODO , install kpie
 		// TODO , install javamodel listener
 	}
 
-	static private void installOtherLoggers(IEditorPart editor) {
-		// Key Listener
 
-		
-	}
 
+	
 	private IEditorPart getEditor(IWorkbenchPartReference partRef) {
 		IWorkbenchPart part = partRef.getPart(false);
 		IEditorPart editor = null;
@@ -94,7 +107,8 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 		return editor;
 	}
 
-	// / IPartListener2 stuff
+	/////////////////
+	/// IPartListener2 stuff
 
 	@Override
 	public void partOpened(IWorkbenchPartReference partRef) {

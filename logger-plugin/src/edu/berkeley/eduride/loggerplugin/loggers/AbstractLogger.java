@@ -43,16 +43,22 @@ public abstract class AbstractLogger {
 				+ action + ": " + content);
 	}
 
+
+	public void log(String action, File txtfile) throws FileNotFoundException {
+		String fStr = FileAsString.convert(txtfile);
+		char[] charr = Base64Coder.encode(fStr.getBytes());
+		log(action, new String(charr));
+	}
+
+	
+	
 	public static void logStatic(String action, String content) {
 		EduRideLogger.log(action, content);
 		System.out.println("(" + System.currentTimeMillis() + ") LOGGER "
 				+ action + ": " + content);
 	}
 
-	public void log(String action, File txtfile) throws FileNotFoundException {
-		String fStr = FileAsString.convert(txtfile);
-		char[] charr = Base64Coder.encode(fStr.getBytes());
-		log(action, charr.toString());
-	}
-
+	
+	
+	
 }
