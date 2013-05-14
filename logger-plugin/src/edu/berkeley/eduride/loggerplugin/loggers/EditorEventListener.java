@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
@@ -34,8 +35,6 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 						"Editor event listener not installed: " + errString);
 			}
 			
-			// do existing editors
-			installOnExistingEditors();
 		}
 	}
 
@@ -78,22 +77,36 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 	
 	private void installMeOnPage(IWorkbenchPage page) {
 		page.addPartListener(this);
+		
+		// installOtherLoggers on existing editors on this page...
+		IEditorReference[] edRefs = page.getEditorReferences();
+		for (IEditorReference edRef : edRefs) {
+			IEditorPart ed = edRef.getEditor(false);
+			if (ed != null) {
+				installOtherLoggers(ed);
+			}
+		}
 	}
 	
 	
 	
 	static private void installOtherLoggers(IEditorPart editor) {
 		// Key Listener
+		final IEditorPart ed = editor;
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				//TODO get line number working yo
+				//new KeyPressInEditor(ed);
+			}
+			
+		});
 
 		
 	}
 	
 	
-	public void installOnExistingEditors() {
-		// find existing editors and log that they are already open
-		// TODO , install kpie
-		// TODO , install javamodel listener
-	}
 
 
 
@@ -114,10 +127,10 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 	public void partOpened(IWorkbenchPartReference partRef) {
 		IEditorPart editor = getEditor(partRef);
 		if (editor != null) {
-
 			log("editorOpened", editor.getTitle());
-
+			installOtherLoggers(editor);
 		}
+
 	}
 
 	@Override

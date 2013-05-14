@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 import edu.berkeley.eduride.loggerplugin.loggers.AbstractLogger;
 import edu.berkeley.eduride.loggerplugin.loggers.EditorEventListener;
+import edu.berkeley.eduride.loggerplugin.loggers.FeedbackLogger;
 import edu.berkeley.eduride.loggerplugin.loggers.NavigationLogger;
 import edu.berkeley.eduride.loggerplugin.loggers.PushOnChooseAssignmentLogger;
 
@@ -33,6 +34,7 @@ public class LoggerInstaller {
 
 		
 		new NavigationLogger(true);
+		new FeedbackLogger(true);
 		
 		new PushOnChooseAssignmentLogger(true);
 

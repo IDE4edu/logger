@@ -1,12 +1,20 @@
 package edu.berkeley.eduride.loggerplugin.loggers;
 
 //import org.eclipse.jdt.internal.ui.JavaEditor;
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -17,6 +25,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
+import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import edu.berkeley.eduride.loggerplugin.LoggerInstaller;
@@ -26,7 +35,10 @@ import edu.berkeley.eduride.loggerplugin.LoggerInstaller;
 public class KeyPressInEditor extends AbstractLogger implements KeyListener {
 
 	public static QualifiedName isa_key = new QualifiedName("edu.berkeley.eduride","isAssignment");
-
+	ITextEditor editor = null;
+	IDocument doc = null;
+	ITextSelection sel = null;
+	int line = -1;
 
 	public KeyPressInEditor(IEditorPart editor) {
 		super("kpie");
@@ -60,6 +72,12 @@ public class KeyPressInEditor extends AbstractLogger implements KeyListener {
 		if (text != null) {
 			text.addKeyListener(this);
 			log("loggerInstall", "KeyPressInEditor installed in " + editor.getTitle());
+			this.editor = (ITextEditor) editor;
+			IDocumentProvider dp = this.editor.getDocumentProvider();
+			this.doc = dp.getDocument(editor.getEditorInput());
+			ISelectionProvider sp = this.editor.getSelectionProvider();
+			sel = (ITextSelection) sp.getSelection();
+			sp.addSelectionChangedListener(new selChanged(this));
 		} else {
 			log("loggerInstall", "KeyPressInEditor failed to installed in " + editor.getTitle());
 		}
@@ -144,9 +162,46 @@ public class KeyPressInEditor extends AbstractLogger implements KeyListener {
 	
 	// ///////
 
+	private class selChanged implements ISelectionChangedListener {
+
+		KeyPressInEditor kpie;
+		
+		public selChanged(KeyPressInEditor kpie) {
+			this.kpie = kpie;
+		}
+		
+		@Override
+		public void selectionChanged(SelectionChangedEvent event) {
+			kpie.sel = (ITextSelection) event.getSelection();
+		}
+		
+	}
+	
+	
+	
+	private StringBuilder keys = new StringBuilder(100);
+	
 	@Override
 	public void keyPressed(KeyEvent ke) {
-		log(String.valueOf(ke.character));
+		try {
+			if (sel != null) {
+				int curline;
+				curline = doc.getLineOfOffset(sel.getOffset());
+				if (curline == line) {
+					keys.append(ke.character);
+				} else {
+					String out = keys.toString();
+					line = curline;
+					keys.setLength(0);
+					keys.append(line);
+					keys.append("::");
+					keys.append(ke.character);
+					log(out); // do this at the end, since its the slowest
+				}
+			}
+		} catch (Exception e) {
+
+		}
 	}
 
 	@Override
