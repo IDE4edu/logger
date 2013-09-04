@@ -19,6 +19,8 @@ public class FileAsString {
 
 			while ((tmp = in.readLine()) != null) {
 				out.append(tmp);
+				// include the line feed here, sheesh!!!!
+				out.append("\n");
 			}
 
 			return out.toString();

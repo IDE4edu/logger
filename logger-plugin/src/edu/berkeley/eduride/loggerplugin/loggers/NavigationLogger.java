@@ -39,12 +39,14 @@ public class NavigationLogger extends AbstractLogger implements NavigationListen
 		log("stepChanged", "Leave " + oldstep + " goto " + newstep);
 		if (oldstep != null && oldstep.isCODE()) {
 			try {
+				// TODO get name of source file, idjit.  And, do you really want to log this, or only after test result?
 				log("File", oldstep.getSourceFile());
 			} catch (FileNotFoundException e) {
 				log("FileError", "couldn't log file contents for step:" + oldstep.getName());
 			}
 		}
 		if (newstep != null && newstep.isCODE()) {
+			// TODO do you want .getSourceFile(), like old step above?
 			log("enterCodeStep", newstep.getSource());
 		}
 
