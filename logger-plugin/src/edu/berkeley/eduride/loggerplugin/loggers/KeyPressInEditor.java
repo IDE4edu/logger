@@ -118,34 +118,7 @@ public class KeyPressInEditor extends AbstractLogger implements KeyListener {
 			IFile file = (input instanceof FileEditorInput)
 					? ((FileEditorInput)input).getFile()
 					: null;
-			if (file != null) {
-				// look at the files in the contained project, see if there
-				// is an ISA file there.
-				IProject proj = file.getProject();
-				boolean containsISA = false;
-				try {
-					proj.setSessionProperty(isa_key, null);
-					proj.accept(new IResourceVisitor() {			
-						@Override
-						public boolean visit(IResource resource) throws CoreException {
-							if (!(resource.getType() == IResource.FILE)) return true;
-							String extension = resource.getFileExtension();
-							if (extension != null) {
-								if (extension.equalsIgnoreCase("isa")) {
-									resource.getProject().setSessionProperty(isa_key, new Boolean(true));
-								}
-							}
-							return true;
-						}
-					});
-					if (((Boolean)proj.getSessionProperty(isa_key)).booleanValue()) {
-						containsISA = true;
-					}
-				} catch (CoreException e) {
-					//e.printStackTrace();
-				}
-				return containsISA;
-			}
+			return edu.berkeley.eduride.base_plugin.UIHelper.containedInISA(file);
 		}
 		return false;
 	}
