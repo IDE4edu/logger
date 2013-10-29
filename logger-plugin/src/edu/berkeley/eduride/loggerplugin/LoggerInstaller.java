@@ -2,7 +2,6 @@ package edu.berkeley.eduride.loggerplugin;
 
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.PlatformUI;
 import edu.berkeley.eduride.loggerplugin.loggers.AbstractLogger;
 import edu.berkeley.eduride.loggerplugin.loggers.EditorEventListener;
@@ -35,9 +34,7 @@ public class LoggerInstaller {
 		
 		new NavigationLogger(true);
 		new FeedbackLogger(true);
-		
 		new PushOnChooseAssignmentLogger(true);
-
 		new EditorEventListener(true);
 		
 		AbstractLogger.logStatic("loggerInstall", "finished installing loggers");

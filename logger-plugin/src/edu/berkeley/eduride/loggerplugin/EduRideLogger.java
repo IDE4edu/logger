@@ -55,8 +55,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 		plugin = this;
 		logStorage = plugin.getStateLocation();
 		makeWorkspaceIDFile();
-		memoryStore = new ArrayList<LogEntry>();
-		memoryStore.ensureCapacity(5000);
+		memoryStore = new ArrayList<LogEntry>(5000);
 
 
 		if (logStorage != null) {
