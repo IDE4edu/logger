@@ -11,21 +11,19 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.framework.BundleContext;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
+import edu.berkeley.eduride.loggerplugin.logEntry.LogEntry;
 import edu.berkeley.eduride.loggerplugin.loggers.AbstractLogger;
 
 /**
@@ -156,24 +154,6 @@ public class EduRideLogger extends AbstractUIPlugin {
 	private static ObjectOutputStream openObjectLogStream = null;
 	private static ArrayList<LogEntry> memoryStore = null;
 	
-	private static class LogEntry implements Serializable {
-		private static final long serialVersionUID = 2L;
-		public final String action;
-		public final String content;
-		public final Long timestamp;
-		
-		public LogEntry(String action, String content, long timestamp) {
-			this.action = action;
-			this.content=content;
-			this.timestamp = timestamp;
-		}
-		
-		public JSONArray asJSONArray() {
-			String[] sarr = {this.action, this.content, this.timestamp.toString()};
-			return (new JSONArray(sarr));
-		}
-	}
-
 	private static int pushLogFromStore(ArrayList<LogEntry> store)  {
 		if (store.size() == 0) {
 			return 0;
@@ -227,7 +207,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 	
 	// TODO fails right now on second read...  class AC unknown?
     private static int pushObjectLogFromFile(File f) {
-    	ArrayList<LogEntry> fileStore = new ArrayList<EduRideLogger.LogEntry>();
+    	ArrayList<LogEntry> fileStore = new ArrayList<LogEntry>();
     	ObjectInputStream stream = null;
     	FileInputStream fis = null;
 		try {
