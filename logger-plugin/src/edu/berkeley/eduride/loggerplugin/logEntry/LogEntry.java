@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class LogEntry implements Serializable {
 	private static final long serialVersionUID = 2L;
@@ -27,8 +27,8 @@ public class LogEntry implements Serializable {
 	 * 
 	 * @return a JSONArray with the action, content, and timestamp. 
 	 */
-	public JSONArray asJSONArray() {
-		return asJSONArray(false);
+	public JSONObject asJSONObject() {
+		return asJSONObject(false);
 	}
 	
 	/**
@@ -39,13 +39,17 @@ public class LogEntry implements Serializable {
 	 * @param includeSerialization true if you want the serialized version, false otherwise
 	 * @return a JSONArray with the action, content, and timestamp. And serialized object if requested.
 	 */
-	public JSONArray asJSONArray(boolean includeSerialization) {
-		String[] sarr = {this.action, this.content, "", this.timestamp.toString()};
+	public JSONObject asJSONObject(boolean includeSerialization) {
+		JSONObject obj = new JSONObject();
+		// TODO
+		obj.put("action", this.action);
+		obj.put("message", this.content);
+		obj.put("time", this.timestamp.toString());
 		if(includeSerialization) {
-			sarr[2] = getSerialization();
+			obj.put("serialized", getSerialization());
 		}
 		
-		return (new JSONArray(sarr));
+		return obj;
 	}
 	
 	public String getSerialization() {

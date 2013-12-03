@@ -116,7 +116,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 			e.printStackTrace();
 		}
 		try {
-			openTextLogFileWriter.write(le.asJSONArray().toString());
+			openTextLogFileWriter.write(le.asJSONObject().toString());
 			openTextLogFileWriter.write(",");
 			openTextLogFileWriter.flush();
 		} catch (IOException e) {
@@ -254,7 +254,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 		rootjson.put("w", EduRideBase.getWorkspaceID());
 		JSONArray logjson = new JSONArray();
 		for (LogEntry entry : store) {
-			logjson.put(entry.asJSONArray());
+			logjson.put(entry.asJSONObject());
 		}
 		rootjson.put("logs", logjson);
 		return rootjson.toString();

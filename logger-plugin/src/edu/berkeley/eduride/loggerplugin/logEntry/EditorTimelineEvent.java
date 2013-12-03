@@ -1,6 +1,6 @@
 package edu.berkeley.eduride.loggerplugin.logEntry;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class EditorTimelineEvent extends LogEntry {
 
@@ -31,8 +31,8 @@ public class EditorTimelineEvent extends LogEntry {
 	 * @return a JSONArray with the action, content, the serialized string version of this class,
 	 *  and timestamp. 
 	 */
-	public JSONArray asJSONArray() {
-		return asJSONArray(true);
+	public JSONObject asJSONObject() {
+		return asJSONObject(true);
 	}
 
 }
