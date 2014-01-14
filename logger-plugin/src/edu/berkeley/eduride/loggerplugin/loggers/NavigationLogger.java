@@ -7,7 +7,7 @@ import org.eclipse.equinox.log.LogFilter;
 
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.NavigationListener;
-import navigatorView.model.Assignment;
+import navigatorView.model.Activity;
 import navigatorView.model.Step;
 
 public class NavigationLogger extends AbstractLogger implements NavigationListener {
@@ -62,7 +62,7 @@ public class NavigationLogger extends AbstractLogger implements NavigationListen
 	}
 
 	@Override
-	public void openISA(Assignment ass) {
+	public void openISA(Activity ass) {
 		log("openISA", ass.getName() + " (" + ass.getProjectName() + ")");
 	
 	}

@@ -118,6 +118,11 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 		return editor;
 	}
 
+	
+	
+	
+	
+	
 	/////////////////
 	/// IPartListener2 stuff
 

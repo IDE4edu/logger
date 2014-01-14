@@ -3,7 +3,7 @@ package edu.berkeley.eduride.loggerplugin.loggers;
 import edu.berkeley.eduride.loggerplugin.EduRideLogger;
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.NavigationListener;
-import navigatorView.model.Assignment;
+import navigatorView.model.Activity;
 import navigatorView.model.Step;
 
 public class PushOnChooseAssignmentLogger extends AbstractLogger implements NavigationListener {
@@ -38,7 +38,7 @@ public class PushOnChooseAssignmentLogger extends AbstractLogger implements Navi
 	}
 
 	@Override
-	public void openISA(Assignment ass) {
+	public void openISA(Activity ass) {
 		EduRideLogger.pushLogsToServer();
 		System.out.println("Tried to push those logs.");
 	}

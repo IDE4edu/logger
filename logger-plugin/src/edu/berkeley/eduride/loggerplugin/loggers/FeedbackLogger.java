@@ -10,7 +10,7 @@ import edu.berkeley.eduride.feedbackview.FeedbackListener;
 
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.NavigationListener;
-import navigatorView.model.Assignment;
+import navigatorView.model.Activity;
 import navigatorView.model.Step;
 
 public class FeedbackLogger extends AbstractLogger implements FeedbackListener {
