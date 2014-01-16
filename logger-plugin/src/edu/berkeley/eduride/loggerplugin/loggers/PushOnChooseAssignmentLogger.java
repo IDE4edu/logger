@@ -1,10 +1,10 @@
 package edu.berkeley.eduride.loggerplugin.loggers;
 
+import edu.berkeley.eduride.base_plugin.model.Activity;
+import edu.berkeley.eduride.base_plugin.model.Step;
 import edu.berkeley.eduride.loggerplugin.EduRideLogger;
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.NavigationListener;
-import navigatorView.model.Activity;
-import navigatorView.model.Step;
 
 public class PushOnChooseAssignmentLogger extends AbstractLogger implements NavigationListener {
 

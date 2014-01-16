@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 
 import org.eclipse.equinox.log.LogFilter;
 
+import edu.berkeley.eduride.base_plugin.model.Activity;
+import edu.berkeley.eduride.base_plugin.model.Step;
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.NavigationListener;
-import navigatorView.model.Activity;
-import navigatorView.model.Step;
 
 public class NavigationLogger extends AbstractLogger implements NavigationListener {
 
