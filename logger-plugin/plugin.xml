@@ -22,10 +22,10 @@
       </scope>
    </extension>
    <extension
-         name="Eduride Logger"
+         name="Logger"
          point="EduRideBasePlugin.startup">
       <startup
-            class="edu.berkeley.eduride.loggerplugin.EdurideStartup">
+            class="edu.berkeley.eduride.loggerplugin.EarlyStartup">
       </startup>
    </extension>
 

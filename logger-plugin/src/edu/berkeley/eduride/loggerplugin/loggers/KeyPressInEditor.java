@@ -118,7 +118,7 @@ public class KeyPressInEditor extends AbstractLogger implements KeyListener {
 			IFile file = (input instanceof FileEditorInput)
 					? ((FileEditorInput)input).getFile()
 					: null;
-			return edu.berkeley.eduride.base_plugin.UIHelper.containedInISA(file);
+			return edu.berkeley.eduride.base_plugin.util.ProjectUtil.withinISAProject(file);
 		}
 		return false;
 	}
