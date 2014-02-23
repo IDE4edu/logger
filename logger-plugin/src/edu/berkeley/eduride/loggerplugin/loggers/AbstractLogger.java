@@ -6,7 +6,7 @@ import java.util.Calendar;
 
 import util.Base64Coder;
 import util.FileAsString;
-
+import edu.berkeley.eduride.base_plugin.util.Console;
 import edu.berkeley.eduride.loggerplugin.EduRideLogger;
 import edu.berkeley.eduride.loggerplugin.LoggerInstaller;
 
@@ -39,8 +39,7 @@ public abstract class AbstractLogger {
 
 	public void log(String action, String content) {
 		EduRideLogger.log(action, content);
-//		System.out.println("(" + System.currentTimeMillis() + ") LOGGER "
-//				+ action + ": " + content);
+		//Console.msg("(" + System.currentTimeMillis() + ") LOGGER " + action + ": " + content);
 	}
 
 
@@ -54,8 +53,7 @@ public abstract class AbstractLogger {
 	
 	public static void logStatic(String action, String content) {
 		EduRideLogger.log(action, content);
-//		System.out.println("(" + System.currentTimeMillis() + ") LOGGER "
-//				+ action + ": " + content);
+//		Console.msg("(" + System.currentTimeMillis() + ") LOGGER " + action + ": " + content);
 	}
 
 	

@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
+import edu.berkeley.eduride.base_plugin.util.Console;
+
 public class FileAsString {
 
 	public static String convert(File txtfile) throws FileNotFoundException {
@@ -25,9 +27,9 @@ public class FileAsString {
 
 			return out.toString();
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			Console.err(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Console.err(e);
 		}
 		return null;
 	}

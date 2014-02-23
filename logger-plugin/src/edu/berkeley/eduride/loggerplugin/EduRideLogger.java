@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.osgi.framework.BundleContext;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
+import edu.berkeley.eduride.base_plugin.util.Console;
 import edu.berkeley.eduride.loggerplugin.logEntry.LogEntry;
 import edu.berkeley.eduride.loggerplugin.loggers.AbstractLogger;
 
@@ -100,12 +101,11 @@ public class EduRideLogger extends AbstractUIPlugin {
 	////
 	
 	private static void reportLoggerError(String msg) {
-		System.err.println("LOGGER: " + msg);
+		Console.err("LOGGER: " + msg);
 	}
 	
 	private static void reportLoggerError(Exception e) {
-		System.err.println("LOGGER");
-		e.printStackTrace();
+		Console.err("LOGGER\n" + e.toString());
 	}
 	
 	////////////////////////////////
@@ -119,7 +119,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 		if (memoryStore != null) {
 			memoryStore.add(le);
 		} else {
-			System.out.println("Missed log event! " + action + content);
+			Console.msg ("Missed log event! " + action + content);
 		}
 		// this is ugly slow right now -- speed it up!
 		try {

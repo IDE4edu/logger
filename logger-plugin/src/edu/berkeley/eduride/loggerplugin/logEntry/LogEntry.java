@@ -7,6 +7,8 @@ import java.io.Serializable;
 
 import org.json.JSONObject;
 
+import edu.berkeley.eduride.base_plugin.util.Console;
+
 public class LogEntry implements Serializable {
 	private static final long serialVersionUID = 2L;
 	private final String action;
@@ -60,8 +62,7 @@ public class LogEntry implements Serializable {
 			oos.flush();
 			return baos.toString();	
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Console.err(e);
 		}
 		return null;
 	}
