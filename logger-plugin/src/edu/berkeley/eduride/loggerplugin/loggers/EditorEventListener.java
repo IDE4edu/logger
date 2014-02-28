@@ -38,6 +38,8 @@ public class EditorEventListener extends AbstractLogger implements IPartListener
 		}
 	}
 
+	// TODO this needs to use IPartListenerInstaller yo
+	
 	public String installMe(ArrayList<String> msgs) {
 		// add as a listener for all open editors (we throw out views in the
 		// listening methods)

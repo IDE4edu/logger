@@ -22,6 +22,23 @@ public class LoggerInstaller {
 	
 	public static void start() {
 		
+		// not right now
+		//initLoggers();
+		
+		
+
+	}
+	
+	
+
+	
+	public static void stop() {
+		// eh, why would we stop things?
+	}
+	
+	
+	
+	private static void initLoggers() {
 		AbstractLogger.logStatic("loggerInstaller", "started installing loggers");
 		try {
 			PlatformUI.getWorkbench();
@@ -40,10 +57,4 @@ public class LoggerInstaller {
 		AbstractLogger.logStatic("loggerInstall", "finished installing loggers");
 	}
 	
-	
-
-	
-	public static void stop() {
-		// eh, why would we stop things?
-	}
 }
