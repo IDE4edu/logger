@@ -9,8 +9,6 @@ import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 
-import edu.berkeley.eduride.loggerplugin.logEntry.EditorTimelineEvent;
-
 public class JavaModelListener extends AbstractLogger implements IElementChangedListener {
 	
 	public JavaModelListener() {

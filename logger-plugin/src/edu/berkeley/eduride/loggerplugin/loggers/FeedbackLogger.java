@@ -1,16 +1,7 @@
 package edu.berkeley.eduride.loggerplugin.loggers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-
-import org.eclipse.equinox.log.LogFilter;
-
-import edu.berkeley.eduride.base_plugin.model.Activity;
-import edu.berkeley.eduride.base_plugin.model.Step;
 import edu.berkeley.eduride.feedbackview.EduRideFeedback;
 import edu.berkeley.eduride.feedbackview.FeedbackListener;
-import navigatorView.NavigatorActivator;
-import navigatorView.controller.NavigationListener;
 
 public class FeedbackLogger extends AbstractLogger implements FeedbackListener {
 

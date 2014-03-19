@@ -13,8 +13,9 @@ import edu.berkeley.eduride.base_plugin.util.Console;
 public class FileAsString {
 
 	public static String convert(File txtfile) throws FileNotFoundException {
+		BufferedReader in = null;
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(
+			in = new BufferedReader(new InputStreamReader(
 					new FileInputStream(txtfile), "UTF8"));
 			String tmp;
 			StringBuilder out = new StringBuilder();
@@ -24,12 +25,19 @@ public class FileAsString {
 				// include the line feed here, sheesh!!!!
 				out.append("\n");
 			}
-
+			in.close();
 			return out.toString();
 		} catch (UnsupportedEncodingException e) {
 			Console.err(e);
 		} catch (IOException e) {
 			Console.err(e);
+		}
+		if (in != null) {
+			try {
+				in.close();
+			} catch (IOException e) {
+				// already closed?
+			}
 		}
 		return null;
 	}
