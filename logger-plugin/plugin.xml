@@ -3,15 +3,6 @@
 <plugin>
 
    <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="edu.berkeley.eduride.base_plugin.prefs.EduRidePreferencePage"
-            class="edu.berkeley.eduride.loggerplugin.preferences.LoggerPreferencePage"
-            id="edu.berkeley.eduride.loggerplugin.preferences.LoggerPreferencePage"
-            name="Logger">
-      </page>
-   </extension>
-   <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer
             class="edu.berkeley.eduride.loggerplugin.preferences.PreferenceInitializer">
