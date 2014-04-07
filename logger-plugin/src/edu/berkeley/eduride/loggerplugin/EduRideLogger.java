@@ -105,7 +105,11 @@ public class EduRideLogger extends AbstractUIPlugin {
 	}
 	
 	private static void reportLoggerError(Exception e) {
-		Console.err("LOGGER\n" + e.toString());
+		Console.err("LOGGER::" + e.toString());
+	}
+	
+	private static void reportLoggerError(String locMsg, Exception e) {
+		Console.err("LOGGER " + locMsg + "\n" + e.toString());
 	}
 	
 	////////////////////////////////
@@ -126,14 +130,14 @@ public class EduRideLogger extends AbstractUIPlugin {
 			openObjectLogStream.writeObject(le);
 			openObjectLogStream.flush();
 		} catch (IOException e) {
-			reportLoggerError(e);
+			reportLoggerError("log() #1", e);
 		}
 		try {
 			openTextLogFileWriter.write(le.asJSONObject().toString());
 			openTextLogFileWriter.write(",");
 			openTextLogFileWriter.flush();
 		} catch (IOException e) {
-			reportLoggerError(e);
+			reportLoggerError("log() #2", e);
 		}
 	}
 	
@@ -218,7 +222,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 			} else if (rd == null) {
 				reportLoggerError("Unable to get input stream to " + domain + ".  Is the server down?");
 			} else {
-				reportLoggerError(e);
+				reportLoggerError("pushLogFromStore()" , e);
 			}
 		} finally {
 			if (connection != null) {
@@ -239,11 +243,11 @@ public class EduRideLogger extends AbstractUIPlugin {
 			stream = new ObjectInputStream(fis);
 		} catch (FileNotFoundException e) {
 			// new FileInputStream failed
-			reportLoggerError(e);
+			reportLoggerError("pushObjectLogFromFile() new FileInputStream failed", e);
 			return 0;
 		} catch (IOException e) {
 			//ObjectInputStream failed
-			reportLoggerError(e);
+			reportLoggerError("pushObjectLogFromFile() new ObjectInputStream failed", e);
 			return 0;
 		}
 		try {
@@ -253,7 +257,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 	    		fileStore.add((LogEntry) o);
 	    	}
 		} catch (ClassNotFoundException e) {
-			reportLoggerError(e);
+			reportLoggerError("pushObjectLogFromFile()", e);
 		} catch (IOException e) {
 			// reached end of stream
 			//reportLoggerError(e);
@@ -266,7 +270,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 				stream.close();
 			}
 		} catch (IOException e) {
-			reportLoggerError(e);
+			reportLoggerError("pushObjectLogFromFile()", e);
 		}
 		return pushLogFromStore(fileStore);
     }
@@ -291,7 +295,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 				fw = new FileWriter(getTextLogFile(), true);
 				fw.write("{\"w\":\"" + EduRideBase.getWorkspaceID() + "\",\"logs\":[");  // start the regular log file, why not
 			} catch (IOException e) {
-				reportLoggerError(e);
+				reportLoggerError("initTextLogFile()", e);
 			}
 		}
 		return fw;
@@ -305,7 +309,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 				fw = new FileOutputStream(getObjectLogFile(), true);
 				oos = new ObjectOutputStream(fw);
 			} catch (IOException e) {
-				reportLoggerError(e);
+				reportLoggerError("initObjectLogFile()", e);
 			}
 		}
 		return oos;
@@ -325,7 +329,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				//log("installFail", "couldn't write the workspace ID file");
-				reportLoggerError(e);
+				reportLoggerError("makeWorkspaceIDFile()", e);
 			}
 		}
 
