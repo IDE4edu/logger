@@ -178,10 +178,11 @@ public class EduRideLogger extends AbstractUIPlugin {
 		int sent = 0;
 		HttpURLConnection connection = null;
 		String domain = EduRideBase.getDomain();
+		int port = EduRideBase.getDomainPort();
 		URL target = null;
 		BufferedReader rd = null;
 		try {
-			target = new URL("http", domain, PUSH_TARGET);
+			target = new URL("http", domain, port, PUSH_TARGET);
 			connection = (HttpURLConnection) target.openConnection();
 			String logParams = generateLogJson(store);
 			connection.setDoOutput(true);
