@@ -36,6 +36,9 @@ public class EduRideLogger extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "edu.berkeley.eduride.loggerplugin"; //$NON-NLS-1$
 	private static final String PUSH_TARGET = "/log/";
 
+	
+	private static boolean gatherLogs = false;
+	
 	// The shared instance
 	private static EduRideLogger plugin;
 	
@@ -54,8 +57,15 @@ public class EduRideLogger extends AbstractUIPlugin {
 		plugin = this;
 		logStorage = plugin.getStateLocation();
 		makeWorkspaceIDFile();
+		
 		memoryStore = new ArrayList<LogEntry>(5000);
 
+		
+		if (!gatherLogs) {
+			return;
+		}
+		
+		
 		//TODO set a global to keep logger from initializing.
 
 		if (logStorage != null) {
@@ -105,11 +115,11 @@ public class EduRideLogger extends AbstractUIPlugin {
 	}
 	
 	private static void reportLoggerError(Exception e) {
-		Console.err("LOGGER::" + e.toString());
+		Console.err("LOGGER:" + e.toString());
 	}
 	
 	private static void reportLoggerError(String locMsg, Exception e) {
-		Console.err("LOGGER " + locMsg + "\n" + e.toString());
+		Console.err("LOGGER: " + locMsg, e);
 	}
 	
 	////////////////////////////////
@@ -117,6 +127,11 @@ public class EduRideLogger extends AbstractUIPlugin {
 	
 	
 	public static void log(String action, String content) {
+		if (!gatherLogs) {
+			return;
+		}
+		
+		
 		// this should do a low latency append to a file.
 		// needs to keep timestamp on each entry!
 		LogEntry le = new LogEntry(action, content, System.currentTimeMillis());
@@ -147,6 +162,10 @@ public class EduRideLogger extends AbstractUIPlugin {
 	}
 	
     private static void pushLogsToServer(boolean logit) {
+		if (!gatherLogs) {
+			return;
+		}
+    	
     	// start a thread for this?
     	// needs to create a json object from workspace_id and log file to send to server.  See github wiki
     	int sent = pushLogFromStore(memoryStore);
@@ -317,6 +336,7 @@ public class EduRideLogger extends AbstractUIPlugin {
 	}
 	
 	
+	// Wha?
 	private void makeWorkspaceIDFile() {
 		File f = logStorage.append("workspaceID").toFile();
 		if (!f.exists()) {
