@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Calendar;
 
-import util.Base64Coder;
-import util.FileAsString;
+import edu.berkeley.eduride.base_plugin.util.Base64Coder;
 import edu.berkeley.eduride.base_plugin.util.Console;
+import edu.berkeley.eduride.base_plugin.util.FileUtil;
 import edu.berkeley.eduride.loggerplugin.EduRideLogger;
 import edu.berkeley.eduride.loggerplugin.LoggerInstaller;
 
@@ -44,7 +44,7 @@ public abstract class AbstractLogger {
 
 
 	public void log(String action, File txtfile) throws FileNotFoundException {
-		String fStr = FileAsString.convert(txtfile);
+		String fStr = FileUtil.getContents(txtfile);
 		char[] charr = Base64Coder.encode(fStr.getBytes());
 		log(action, new String(charr));
 	}
